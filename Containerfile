@@ -31,7 +31,7 @@ RUN set -eux; \
     \
     # Configure PHP upload limits
     printf "upload_max_filesize = ${PHP_UPLOAD_LIMIT}\npost_max_size = ${PHP_POST_LIMIT}\nmemory_limit = ${PHP_MEMORY_LIMIT}\n" \
-        > /usr/local/etc/php/conf.d/99-custom-limits.ini
+        > /usr/local/etc/php/conf-d/99-custom-limits.ini
 
 # Copy and unzip the Motta theme into wp-content
 COPY motta.zip /tmp/motta.zip
@@ -57,5 +57,7 @@ RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh
     chmod +x /usr/local/bin/wp
 
 COPY wp_initial.sh /usr/local/bin/docker-entrypoint-init.sh
-ENTRYPOINT ["docker-entrypoint-init.sh"]
-    
+
+# Ensure the script is executed after the container starts
+ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/docker-entrypoint-init.sh && apache2-foreground"]
+
