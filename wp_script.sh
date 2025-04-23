@@ -78,5 +78,4 @@ podman run --rm -it --name wp-test --pod bytecrate-pod \
   -e WORDPRESS_DB_USER=chris \
   -e WORDPRESS_DB_PASSWORD='maGazine1!' \
   -e WORDPRESS_DB_NAME=vendor-db \
-  -v bytecrate-wordpress-data:/var/www/html \
   docker.io/christianbueno1/wordpress:6.8-php8.3-large-upload-soap bash
