@@ -1,24 +1,3 @@
-# FROM docker.io/library/wordpress:6.8.0-php8.3-apache
-
-# This will copy everything, including hidden files:
-# COPY . /var/www/html/
-# or Copy it explicitly
-# COPY .env /var/www/html/.env
-
-
-# # 1. Copy PHP development ini file to production
-# RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
-
-# # 2. Configure Apache upload limits
-# RUN echo "LimitRequestBody 67108864" > /etc/apache2/conf-available/upload-size.conf && \
-#     a2enconf upload-size
-
-# # 3. Set PHP custom limits
-# RUN printf "upload_max_filesize = 64M\npost_max_size = 64M\nmemory_limit = 128M\n" \
-#     >> /usr/local/etc/php/conf.d/99-custom-limits.ini
-
-
-
 # Use the official WordPress image with PHP 8.3 and Apache
 FROM docker.io/library/wordpress:6.8.0-php8.3-apache
 
