@@ -4,15 +4,20 @@ set -e
 
 # Parse arguments
 REMOVE_VOLUMES=false
+REMOVE_POD=false
 for arg in "$@"; do
   case $arg in
     --rm-volumes)
       REMOVE_VOLUMES=true
       shift
       ;;
+    --rm-pod)
+      REMOVE_POD=true
+      shift
+      ;;
     *)
       echo "❌ Unknown argument: $arg"
-      echo "Usage: $0 [--rm-volumes]"
+      echo "Usage: $0 [--rm-volumes] [--rm-pod]"
       exit 1
       ;;
   esac
@@ -29,12 +34,14 @@ set -a
 set +a
 
 # 🧹 Stop and remove existing pod
-echo "🧹 Checking for existing pod: $PODMAN_POD_WEB"
-if podman pod exists $PODMAN_POD_WEB; then
-  echo "🛑 Stopping existing pod: $PODMAN_POD_WEB"
-  podman pod stop $PODMAN_POD_WEB
-  echo "🗑️ Removing existing pod: $PODMAN_POD_WEB"
-  podman pod rm $PODMAN_POD_WEB
+if [ "$REMOVE_POD" = true ]; then
+  echo "🧹 Checking for existing pod: $PODMAN_POD_WEB"
+  if podman pod exists $PODMAN_POD_WEB; then
+    echo "🛑 Stopping existing pod: $PODMAN_POD_WEB"
+    podman pod stop $PODMAN_POD_WEB
+    echo "🗑️ Removing existing pod: $PODMAN_POD_WEB"
+    podman pod rm $PODMAN_POD_WEB
+  fi
 fi
 
 # Remove existing volumes if --rm-volumes is passed
