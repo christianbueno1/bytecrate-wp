@@ -12,6 +12,17 @@ set -e
 # set +a
 
 # Install WordPress if not already installed
+if [ ! -f /var/www/html/wp-config.php ]; then
+  echo "📦 Installing WordPress..."
+  su -s /bin/bash www-data -c "wp core download --allow-root"
+  su -s /bin/bash www-data -c "wp config create --allow-root \
+    --dbname=$MARIADB_DB \
+    --dbuser=$MARIADB_USER \
+    --dbpass=$MARIADB_PASSWORD \
+    --dbhost=$PODMAN_MARIADB_CONTAINER \
+    --path=/var/www/html"
+  su -s /bin/bash www-data -c "wp db create --allow-root"
+fi
 echo "📦 Initializing WordPress..."
 su -s /bin/bash www-data -c "wp core install \
   --url=$WP_URL \

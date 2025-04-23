@@ -56,8 +56,8 @@ RUN set -eux; \
 RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x /usr/local/bin/wp
 
-COPY wp_initial.sh /usr/local/bin/docker-entrypoint-init.sh
+# COPY wp_initial.sh /usr/local/bin/docker-entrypoint-init.sh
 
-# Ensure the script is executed after the container starts
-ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/docker-entrypoint-init.sh && apache2-foreground"]
+# # Ensure the script is executed after the container starts
+# ENTRYPOINT ["/bin/sh", "-c", "/usr/local/bin/docker-entrypoint-init.sh && apache2-foreground"]
 
