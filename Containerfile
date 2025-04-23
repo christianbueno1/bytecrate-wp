@@ -30,7 +30,7 @@ RUN set -eux; \
     \
     # Install dependencies and php-soap extension
     apt-get update; \
-    apt-get install -y --no-install-recommends libxml2-dev; \
+    apt-get install -y --no-install-recommends libxml2-dev unzip; \
     docker-php-ext-install soap; \
     \
     # Clean up
