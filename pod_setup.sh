@@ -3,19 +3,19 @@
 set -e
 
 # Parse arguments
-REMOVE_VOLUMES=false
+REMOVE_VOLUME=false
 REMOVE_POD=false
 for arg in "$@"; do
   case $arg in
-    --rm-volumes)
-      REMOVE_VOLUMES=true
+    --rm-volume)
+      REMOVE_VOLUME=true
       ;;
     --rm-pod)
       REMOVE_POD=true
       ;;
     *)
       echo "❌ Unknown argument: $arg"
-      echo "Usage: $0 [--rm-volumes] [--rm-pod]"
+      echo "Usage: $0 [--rm-volume] [--rm-pod]"
       exit 1
       ;;
   esac
@@ -42,8 +42,8 @@ if [ "$REMOVE_POD" = true ]; then
   fi
 fi
 
-# Remove existing volumes if --rm-volumes is passed
-if [ "$REMOVE_VOLUMES" = true ]; then
+# Remove existing volumes if --rm-volume is passed
+if [ "$REMOVE_VOLUME" = true ]; then
   echo "🗑️ Removing existing volumes..."
   if podman volume exists $PODMAN_MARIADB_VOLUME; then
     podman volume rm $PODMAN_MARIADB_VOLUME
