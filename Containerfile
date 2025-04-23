@@ -52,5 +52,25 @@ RUN set -eux; \
 COPY motta.zip /tmp/motta.zip
 
 RUN set -eux; \
-    unzip /tmp/motta.zip -d /var/www/html/wp-content/themes/; \
+    unzip /tmp/motta.zip -d /tmp/ && \
+    mv /tmp/motta /var/www/html/wp-content/themes/ && \
+    chown -R www-data:www-data /var/www/html/wp-content/themes/motta && \
     rm /tmp/motta.zip
+
+# Copy the child theme zip into the container
+COPY motta-child.zip /tmp/motta-child.zip
+
+# Extract and move it to wp-content/themes
+RUN set -eux; \
+    unzip /tmp/motta-child.zip -d /tmp/ && \
+    mv /tmp/motta-child /var/www/html/wp-content/themes/ && \
+    chown -R www-data:www-data /var/www/html/wp-content/themes/motta-child && \
+    rm /tmp/motta-child.zip
+
+# Install WP-CLI
+RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x /usr/local/bin/wp
+
+COPY wp_initial.sh /usr/local/bin/docker-entrypoint-init.sh
+ENTRYPOINT ["docker-entrypoint-init.sh"]
+    
