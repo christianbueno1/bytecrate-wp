@@ -2,14 +2,14 @@
 set -e
 
 # Load environment
-ENV_FILE=".env"
-if [ ! -f "$ENV_FILE" ]; then
-  echo "❌ Environment file not found: $ENV_FILE"
-  exit 1
-fi
-set -a
-. "$ENV_FILE"
-set +a
+# ENV_FILE=".env"
+# if [ ! -f "$ENV_FILE" ]; then
+#   echo "❌ Environment file not found: $ENV_FILE"
+#   exit 1
+# fi
+# set -a
+# . "$ENV_FILE"
+# set +a
 
 # Install WordPress if not already installed
 echo "📦 Initializing WordPress..."

@@ -68,3 +68,15 @@ su -s /bin/bash www-data -c "wp option update blog_public 0"
 
 # If you want to reinstall for testing, you can do a clean-up with:
 su -s /bin/bash www-data -c "wp db reset --yes"
+
+# This passes those variables as container environment variables, not as a .env file written to the container's file system.
+# --env-file .env
+
+podman run --rm -it --name wp-test --pod bytecrate-pod \
+  --env-file .env \
+  -e WORDPRESS_DB_HOST=byecrate-mariadb:3306 \
+  -e WORDPRESS_DB_USER=chris \
+  -e WORDPRESS_DB_PASSWORD='maGazine1!' \
+  -e WORDPRESS_DB_NAME=vendor-db \
+  -v bytecrate-wordpress-data:/var/www/html \
+  docker.io/christianbueno1/wordpress:6.8-php8.3-large-upload-soap

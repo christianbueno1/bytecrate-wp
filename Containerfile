@@ -1,5 +1,11 @@
 # FROM docker.io/library/wordpress:6.8.0-php8.3-apache
 
+# This will copy everything, including hidden files:
+# COPY . /var/www/html/
+# or Copy it explicitly
+# COPY .env /var/www/html/.env
+
+
 # # 1. Copy PHP development ini file to production
 # RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
