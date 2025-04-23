@@ -9,11 +9,9 @@ for arg in "$@"; do
   case $arg in
     --rm-volumes)
       REMOVE_VOLUMES=true
-      shift
       ;;
     --rm-pod)
       REMOVE_POD=true
-      shift
       ;;
     *)
       echo "❌ Unknown argument: $arg"
@@ -54,7 +52,6 @@ if [ "$REMOVE_VOLUMES" = true ]; then
     podman volume rm $PODMAN_WP_VOLUME
   fi
 fi
-
 
 # Create persistent volumes
 echo "📦 Creating persistent volumes..."
