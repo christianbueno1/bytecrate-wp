@@ -48,7 +48,7 @@ RUN set -eux; \
     printf "upload_max_filesize = ${PHP_UPLOAD_LIMIT}\npost_max_size = ${PHP_POST_LIMIT}\nmemory_limit = ${PHP_MEMORY_LIMIT}\n" \
         > /usr/local/etc/php/conf.d/99-custom-limits.ini
 
-Copy and unzip the Motta theme into wp-content
+# Copy and unzip the Motta theme into wp-content
 COPY motta.zip /tmp/motta.zip
 
 RUN set -eux; \
