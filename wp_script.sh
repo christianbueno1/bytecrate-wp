@@ -78,4 +78,18 @@ podman run --rm -it --name wp-test --pod bytecrate-pod \
   -e WORDPRESS_DB_USER=chris \
   -e WORDPRESS_DB_PASSWORD='maGazine1!' \
   -e WORDPRESS_DB_NAME=vendor-db \
+  -v bytecrate-wordpress-data:/var/www/html \
   docker.io/christianbueno1/wordpress:6.8-php8.3-large-upload-soap bash
+
+podman run -d --name bytecrate-wordpress --pod bytecrate-pod \
+  --env-file .env.expanded \
+  -e WORDPRESS_DB_HOST=byecrate-mariadb:3306 \
+  -e WORDPRESS_DB_USER=chris \
+  -e WORDPRESS_DB_PASSWORD='maGazine1!' \
+  -e WORDPRESS_DB_NAME=vendor-db \
+  -v bytecrate-wordpress-data:/var/www/html \
+  docker.io/christianbueno1/wordpress:6.8-php8.3-large-upload-soap
+
+
+podman exec -it bytecrate-wordpress bash
+podman exec -it bytecrate-wordpress env
