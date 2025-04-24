@@ -30,12 +30,12 @@ else
 fi
 
 # use wp-cli to enter the intial WordPress setup values
-# wp core install \
-# --url="$WP_URL" \
-# --title="$WP_TITLE" \
-# --admin_user="$WP_ADMIN_USER" \
-# --admin_password="$WP_ADMIN_PASSWORD" \
-# --admin_email="$WP_ADMIN_EMAIL"
+su -s /bin/bash www-data -c 'wp core install \
+--url="$WP_URL" \
+--title="$WP_TITLE" \
+--admin_user="$WP_ADMIN_USER" \
+--admin_password="$WP_ADMIN_PASSWORD" \
+--admin_email="$WP_ADMIN_EMAIL"'
 
 # sudo -u USER -i -- wp <command>
 #
@@ -83,13 +83,28 @@ podman run --rm -it --name wp-test --pod bytecrate-pod \
 
 podman run -d --name bytecrate-wordpress --pod bytecrate-pod \
   --env-file .env.expanded \
-  -e WORDPRESS_DB_HOST=byecrate-mariadb:3306 \
+  -e WORDPRESS_DB_HOST=bytecrate-mariadb:3306 \
   -e WORDPRESS_DB_USER=chris \
-  -e WORDPRESS_DB_PASSWORD='maGazine1!' \
+  -e WORDPRESS_DB_PASSWORD='maGazine1!devE' \
   -e WORDPRESS_DB_NAME=vendor-db \
   -v bytecrate-wordpress-data:/var/www/html \
   docker.io/christianbueno1/wordpress:6.8-php8.3-large-upload-soap
 
 
 podman exec -it bytecrate-wordpress bash
+# This lists all environment variables set in the container — including those from --env-file.
 podman exec -it bytecrate-wordpress env
+# especifically the PODMAN_MARIADB_IMAGE variable
+podman exec -it bytecrate-wordpress printenv PODMAN_MARIADB_IMAGE
+# or echo it, use quotes
+podman exec -it bytecrate-wordpress sh -c 'echo $PODMAN_MARIADB_IMAGE'
+
+podman exec bytecrate-wordpress sh -c '
+  # init wordpress
+  echo "📦 Init WordPress..."
+  su -s /bin/bash www-data -c "wp core install \
+    --url=$WP_URL \
+    --title=$WP_TITLE \
+    --admin_user=$WP_ADMIN_USER \
+    --admin_password=$WP_ADMIN_PASSWORD \
+    --admin_email=$WP_ADMIN_EMAIL"'
