@@ -22,7 +22,7 @@ for arg in "$@"; do
 done
 
 # Load environment
-ENV_FILE=".env"
+ENV_FILE=".env.expanded"
 if [ ! -f "$ENV_FILE" ]; then
   echo "❌ Environment file not found: $ENV_FILE"
   exit 1
@@ -87,9 +87,9 @@ podman build -t $PODMAN_WP_IMAGE -f Containerfile .
 echo "🚀 Starting WordPress container: $PODMAN_WP_CONTAINER"
 podman run -d --name $PODMAN_WP_CONTAINER --pod $PODMAN_POD_WEB \
   -e WORDPRESS_DB_HOST="$PODMAN_MARIADB_CONTAINER:3306" \
+  -e WORDPRESS_DB_NAME="$MARIADB_DB" \
   -e WORDPRESS_DB_USER="$MARIADB_USER" \
   -e WORDPRESS_DB_PASSWORD="$MARIADB_PASSWORD" \
-  -e WORDPRESS_DB_NAME="$MARIADB_DB" \
   -v $PODMAN_WP_VOLUME:/var/www/html \
   $PODMAN_WP_IMAGE
 
