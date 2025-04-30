@@ -77,16 +77,16 @@ podman run --rm -it --name wp-test --pod bytecrate-pod \
   -e WORDPRESS_DB_HOST=byecrate-mariadb:3306 \
   -e WORDPRESS_DB_USER=chris \
   -e WORDPRESS_DB_PASSWORD='maGazine1!' \
-  -e WORDPRESS_DB_NAME=vendor-db \
+  -e WORDPRESS_DB_NAME=vendor_db \
   -v bytecrate-wordpress-data:/var/www/html \
   docker.io/christianbueno1/wordpress:6.8-php8.3-large-upload-soap bash
 
 podman run -d --name bytecrate-wordpress --pod bytecrate-pod \
   --env-file .env.expanded \
   -e WORDPRESS_DB_HOST=bytecrate-mariadb:3306 \
+  -e WORDPRESS_DB_NAME=vendor_db \
   -e WORDPRESS_DB_USER=chris \
   -e WORDPRESS_DB_PASSWORD='maGazine1!devE' \
-  -e WORDPRESS_DB_NAME=vendor-db \
   -v bytecrate-wordpress-data:/var/www/html \
   docker.io/christianbueno1/wordpress:6.8-php8.3-large-upload-soap
 
@@ -99,12 +99,19 @@ podman exec -it bytecrate-wordpress printenv PODMAN_MARIADB_IMAGE
 # or echo it, use quotes
 podman exec -it bytecrate-wordpress sh -c 'echo $PODMAN_MARIADB_IMAGE'
 
-podman exec bytecrate-wordpress sh -c '
-  # init wordpress
-  echo "📦 Init WordPress..."
-  su -s /bin/bash www-data -c "wp core install \
-    --url=$WP_URL \
-    --title=$WP_TITLE \
-    --admin_user=$WP_ADMIN_USER \
-    --admin_password=$WP_ADMIN_PASSWORD \
-    --admin_email=$WP_ADMIN_EMAIL"'
+podman exec -it bytecrate-wordpress sh -c 'wp --info'
+
+podman exec bytecrate-wordpress bash -c '
+  su -s /bin/bash www-data -c "
+    wp core is-installed || wp core install \
+      --url=\"\$WP_URL\" \
+      --title=\"\$WP_TITLE\" \
+      --admin_user=\"\$WP_ADMIN_USER\" \
+      --admin_password=\"\$WP_ADMIN_PASSWORD\" \
+      --admin_email=\"\$WP_ADMIN_EMAIL\""
+'
+
+podman exec bytecrate-wordpress \
+  su -s /bin/bash www-data -c "wp theme activate motta-child"
+
+
